@@ -14,9 +14,11 @@ import com.example.sumnotes.data.NoteEntity;
 
 public class NoteListAdapter extends ListAdapter<NoteEntity, NoteListAdapter.VH> {
     public interface OnClick { void onClick(NoteEntity note); }
+    public interface OnLongClick { void onLongClick(NoteEntity note); }
     private final OnClick onClick;
+    private final OnLongClick onLongClick;
 
-    public NoteListAdapter(OnClick onClick) {
+    public NoteListAdapter(OnClick onClick, OnLongClick onLongClick) {
         super(new DiffUtil.ItemCallback<NoteEntity>() {
             public boolean areItemsTheSame(NoteEntity a, NoteEntity b){ return a.id == b.id; }
             public boolean areContentsTheSame(NoteEntity a, NoteEntity b){
@@ -24,6 +26,7 @@ public class NoteListAdapter extends ListAdapter<NoteEntity, NoteListAdapter.VH>
             }
         });
         this.onClick = onClick;
+        this.onLongClick = onLongClick;
     }
 
     static class VH extends RecyclerView.ViewHolder {
@@ -47,5 +50,9 @@ public class NoteListAdapter extends ListAdapter<NoteEntity, NoteListAdapter.VH>
         h.note_calories.setText(n.calories.toString());
         h.note_date.setText(DateConverter.formatTimestamp(n.createdAt));
         h.itemView.setOnClickListener(v -> onClick.onClick(n));
+        h.itemView.setOnLongClickListener(v -> {
+            onLongClick.onLongClick(n);
+            return true;
+        });
     }
 }

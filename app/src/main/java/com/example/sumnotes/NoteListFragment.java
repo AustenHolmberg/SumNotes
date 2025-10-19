@@ -1,5 +1,6 @@
 package com.example.sumnotes;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -31,10 +32,19 @@ public class NoteListFragment extends Fragment {
         vm = new ViewModelProvider(this).get(NoteListViewModel.class);
         RecyclerView rv = v.findViewById(R.id.recycler);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
+
         NoteListAdapter adapter = new NoteListAdapter(note -> {
             Bundle args = new Bundle(); args.putLong("noteId", note.id);
             NavHostFragment.findNavController(this).navigate(R.id.noteEditorFragment, args);
-        });
+        }, note -> {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.delete_note_title)
+                .setMessage(R.string.delete_note_message)
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> vm.delete(note.id))
+                .setNegativeButton(android.R.string.no, null)
+                .show();
+    });
+
         rv.setAdapter(adapter);
 
         vm.notes.observe(getViewLifecycleOwner(), notes -> {

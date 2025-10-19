@@ -27,10 +27,6 @@ public class NoteRepository {
     public void upsertAsync(NoteEntity n) { io.execute(() -> {
         long now = System.currentTimeMillis();
         n.updatedAt = now;
-        if (n.id == 0) {
-            n.createdAt = now;
-        }
-
         dao.upsert(n);
     });}
 

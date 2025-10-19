@@ -20,11 +20,19 @@ public class NoteEditorViewModel extends AndroidViewModel {
         super(app);
         repo = new NoteRepository(app);
     }
-
-    public void setNoteId(long id) { this.noteId = id; note = repo.observe(id); }
+    public void setNoteId(long id) {
+        this.noteId = id;
+        note = repo.observe(id);
+    }
     public void save(String title, String body) {
-        NoteEntity n = new NoteEntity();
-        n.id = noteId == -1 ? 0 : noteId;
+        NoteEntity n;
+        if (noteId == -1) {
+            n = new NoteEntity();
+            n.id = 0;
+            n.createdAt = System.currentTimeMillis();
+        } else {
+            n = note.getValue();
+        }
         n.title = title;
         n.body = body;
 
@@ -36,10 +44,11 @@ public class NoteEditorViewModel extends AndroidViewModel {
             int num = Integer.parseInt(m.group());
             sum += num;
         }
-
         n.calories = sum;
 
         repo.upsertAsync(n);
     }
-    public void delete() { if (noteId > 0) repo.deleteAsync(noteId); }
+    public void delete() {
+        if (noteId > 0) repo.deleteAsync(noteId);
+    }
 }
