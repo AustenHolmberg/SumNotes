@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/noteListFragment">
+
+    <!-- 🏠 Notes list screen -->
+    <fragment
+        android:id="@+id/noteListFragment"
+        android:name="com.example.sumnotes.NoteListFragment"
+        android:label="Notes"
+        tools:layout="@layout/fragment_note_list">
+
+        <!-- Action: when a user taps a note or FAB -->
+        <action
+            android:id="@+id/action_noteListFragment_to_noteEditorFragment"
+            app:destination="@id/noteEditorFragment" />
+    </fragment>
+
+    <!-- ✏️ Note editor screen -->
+    <fragment
+        android:id="@+id/noteEditorFragment"
+        android:name="com.example.sumnotes.NoteEditorFragment"
+        android:label="Edit Note"
+        tools:layout="@layout/fragment_note_editor">
+
+        <!-- Optional argument for opening an existing note -->
+        <argument
+            android:name="noteId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+
+</navigation>
