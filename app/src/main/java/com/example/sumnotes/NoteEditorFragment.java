@@ -16,8 +16,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.sumnotes.data.NoteEntity;
+
+import java.math.BigInteger;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import com.example.sumnotes.Utils;
 
 public class NoteEditorFragment extends Fragment {
     private NoteEditorViewModel vm;
@@ -41,17 +45,16 @@ public class NoteEditorFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                int sum = 0;
-                Pattern p = Pattern.compile("\\d+");
-                Matcher m = p.matcher(s.toString());
+                BigInteger sum = new BigInteger("0");
+                Matcher m = Utils.sumPattern.matcher(s.toString());
 
                 while (m.find()) {
-                    int num = Integer.parseInt(m.group());
-                    sum += num;
+                    BigInteger bigNum = new BigInteger(m.group());
+                    sum = sum.add(bigNum);
                 }
 
-                calorieView = view.findViewById(R.id.etCalories);
-                calorieView.setText(Integer.toString(sum));
+                calorieView = view.findViewById(R.id.etSum);
+                calorieView.setText(sum.toString());
             }
         });
 
@@ -59,19 +62,20 @@ public class NoteEditorFragment extends Fragment {
     }
 
     @Override public void onViewCreated(@NonNull View v, Bundle b){
+        noteId = getArguments().getLong("noteId", -1);
         vm = new ViewModelProvider(this).get(NoteEditorViewModel.class);
         etTitle = v.findViewById(R.id.etTitle);
         etBody  = v.findViewById(R.id.etBody);
 
-
-        noteId = getArguments()!=null ? getArguments().getLong("noteId", -1) : -1;
         if (noteId > 0) {
             vm.setNoteId(noteId);
             vm.note.observe(getViewLifecycleOwner(), n -> {
-                if (n != null) { etTitle.setText(n.title); etBody.setText(n.body); }
+                if (n != null) {
+                    etTitle.setText(n.title);
+                    etBody.setText(n.body);
+                }
             });
         }
-        // For new notes, vm.save() will assign/update on first save with id -1 -> insert
     }
 
     @Override public void onPause() {

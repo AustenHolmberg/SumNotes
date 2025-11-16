@@ -2,6 +2,7 @@ package com.example.sumnotes.data;
 
 import android.content.Context;
 
+import androidx.core.util.Consumer;
 import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 
@@ -24,11 +25,17 @@ public class NoteRepository {
         return dao.observe(id);
     }
 
-    public void upsertAsync(NoteEntity n) { io.execute(() -> {
-        long now = System.currentTimeMillis();
-        n.updatedAt = now;
-        dao.upsert(n);
-    });}
+    public NoteEntity get(long id) {return dao.get(id);}
+
+    public void upsertAsync(NoteEntity n, Consumer<NoteEntity> onUpserted) {
+        io.execute(() -> {
+            long now = System.currentTimeMillis();
+            n.updatedAt = now;
+            long id = dao.upsert(n);
+            NoteEntity note = dao.get(id);
+            onUpserted.accept(note);
+        });
+    }
 
     public void deleteAsync(long id) { io.execute(() -> dao.delete(id)); }
 }

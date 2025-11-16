@@ -1,10 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.SumNotes" parent="Theme.Material3.DayNight.NoActionBar">
-    </style>
+    <style name="Theme.SumNotes" parent="Theme.Material3.Dark">
+        <item name="colorPrimary">@color/colorPrimary</item>
 
-    <style name="Theme.SumNotes" parent="Base.Theme.SumNotes">
-        <item name="colorAccent">@color/accent_color</item>
-        <item name="colorPrimary">@color/primary_color</item>
+        <!-- Ensure MaterialCardView has a default style -->
+        <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
     </style>
 </resources>

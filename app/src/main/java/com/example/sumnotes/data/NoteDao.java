@@ -16,6 +16,9 @@ public interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :id")
     LiveData<NoteEntity> observe(long id);
 
+    @Query("SELECT * FROM notes WHERE id = :id")
+    NoteEntity get(long id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long upsert(NoteEntity note);
 

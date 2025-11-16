@@ -30,11 +30,11 @@ public class NoteListAdapter extends ListAdapter<NoteEntity, NoteListAdapter.VH>
     }
 
     static class VH extends RecyclerView.ViewHolder {
-        TextView note_title, note_calories, note_date;
+        TextView note_title, note_sum, note_date;
         VH(View v){
             super(v);
             note_title = v.findViewById(R.id.note_title);
-            note_calories = v.findViewById(R.id.note_calories);
+            note_sum = v.findViewById(R.id.note_sum);
             note_date = v.findViewById(R.id.note_date);
         }
     }
@@ -47,7 +47,7 @@ public class NoteListAdapter extends ListAdapter<NoteEntity, NoteListAdapter.VH>
     public void onBindViewHolder(@NonNull VH h, int pos){
         NoteEntity n = getItem(pos);
         h.note_title.setText(n.title.isEmpty() ? "(Untitled)" : n.title);
-        h.note_calories.setText(n.calories.toString());
+        h.note_sum.setText(n.sum);
         h.note_date.setText(DateConverter.formatTimestamp(n.createdAt));
         h.itemView.setOnClickListener(v -> onClick.onClick(n));
         h.itemView.setOnLongClickListener(v -> {

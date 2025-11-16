@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginTop="24dp"
     tools:context="NoteEditorFragment">
 
     <LinearLayout
@@ -32,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             app:cardCornerRadius="4dp"
             app:cardElevation="5dp"
             app:strokeWidth="1dp"
@@ -40,7 +41,7 @@
             app:cardBackgroundColor="?attr/colorSurfaceVariant">
 
         <TextView
-            android:id="@+id/etCalories"
+            android:id="@+id/etSum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"

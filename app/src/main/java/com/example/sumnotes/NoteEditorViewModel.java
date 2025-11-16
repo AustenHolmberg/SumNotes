@@ -1,54 +1,75 @@
 package com.example.sumnotes;
 
 import android.app.Application;
+import android.provider.ContactsContract;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 import com.example.sumnotes.data.NoteEntity;
 import com.example.sumnotes.data.NoteRepository;
+import com.example.sumnotes.Utils;
 
 import java.util.regex.*;
 
 public class NoteEditorViewModel extends AndroidViewModel {
     private final NoteRepository repo;
-    private long noteId = -1;
     public LiveData<NoteEntity> note;
+    private final MutableLiveData<Long> noteId = new MutableLiveData<>();
+    private NoteEntity noteEntity = null;
+    public void setNoteId(long id) {
+        noteId.postValue(id);
+        note = repo.observe(id);
+    }
+
+    public Long getNoteId() {
+        return noteId.getValue();
+    }
 
     public NoteEditorViewModel(@NonNull Application app) {
         super(app);
         repo = new NoteRepository(app);
     }
-    public void setNoteId(long id) {
-        this.noteId = id;
-        note = repo.observe(id);
-    }
+
     public void save(String title, String body) {
-        NoteEntity n;
-        if (noteId == -1) {
-            n = new NoteEntity();
-            n.id = 0;
-            n.createdAt = System.currentTimeMillis();
+        NoteEntity current;
+        if (note != null && note.getValue() != null) {
+            current = note.getValue();
         } else {
-            n = note.getValue();
+            current = new NoteEntity();
+            Long noteId = getNoteId();
+            if (noteId == null) {
+                current.id = 0;
+                current.createdAt = System.currentTimeMillis();
+            } else {
+                current.id = noteId;
+                current.createdAt = noteEntity.createdAt;
+            }
         }
-        n.title = title;
-        n.body = body;
+        current.title = title;
+        current.body = body;
 
         int sum = 0;
-        Pattern p = Pattern.compile("\\d+");
-        Matcher m = p.matcher(body);
+        Matcher m = Utils.sumPattern.matcher(body);
 
         while (m.find()) {
             int num = Integer.parseInt(m.group());
             sum += num;
         }
-        n.calories = sum;
+        current.sum = Integer.toString(sum);
 
-        repo.upsertAsync(n);
+        repo.upsertAsync(current, note -> {
+            if (getNoteId() == null)  {
+                setNoteId(note.id);
+            }
+            noteEntity = note;
+        });
     }
     public void delete() {
-        if (noteId > 0) repo.deleteAsync(noteId);
+        Long noteId = getNoteId();
+        if (noteId != null) repo.deleteAsync(noteId);
     }
 }

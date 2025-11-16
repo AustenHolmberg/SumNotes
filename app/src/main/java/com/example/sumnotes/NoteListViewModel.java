@@ -21,10 +21,4 @@ public class NoteListViewModel extends AndroidViewModel {
         notes = repo.observeAll();
     }
     public void delete(long id) { repo.deleteAsync(id); }
-    public long newEmptyNote() { // optionally create immediately
-        NoteEntity n = new NoteEntity();
-        n.title = ""; n.body = "";
-        repo.upsertAsync(n); // return id if you want synchronous creation: use a callback/future
-        return 0L; // or manage creation in editor
-    }
 }

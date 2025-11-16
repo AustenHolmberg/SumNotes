@@ -46,7 +46,7 @@
 
         <!-- Preview / body snippet -->
         <TextView
-            android:id="@+id/note_calories"
+            android:id="@+id/note_sum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"

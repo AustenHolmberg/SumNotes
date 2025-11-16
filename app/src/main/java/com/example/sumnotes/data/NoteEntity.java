@@ -11,7 +11,7 @@ public class NoteEntity {
     @NonNull
     public String title = "";
     @NonNull public String body = "";
-    public Integer calories = 0;
+    public String sum = "0";
     public long updatedAt;
     public long createdAt;
 }
